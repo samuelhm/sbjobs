@@ -1,12 +1,12 @@
-const Fastify = require('fastify');
+import Fastify from 'fastify';
 const fastify = Fastify({
-  logger: true
+  logger: true,
 });
 // Ruta principal (raíz /)
-fastify.get('/', async (request, reply) => {
-  return { 
-    status: 'ok', 
-    message: '¡El servicio backend de sbjobs está funcionando perfectamente2!' 
+fastify.get('/', async (_request, _reply) => {
+  return {
+    status: 'ok',
+    message: '¡El servicio backend de sbjobs está funcionando perfectamente2!',
   };
 });
 
