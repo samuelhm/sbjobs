@@ -1,0 +1,60 @@
+services:
+  postgres:
+    build: ./services/postgres
+    container_name: postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${DB_ADMIN}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_admin_pass
+      DB_USER: ${DB_USER}
+      DB_USER_PASSWORD_FILE: /run/secrets/db_user_pass
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    secrets:
+      - db_admin_pass
+      - db_user_pass
+    networks:
+      - sbjobs_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_ADMIN} -d ${DB_NAME}"]
+      interval: 30s
+      retries: 20
+  backend:
+    build:
+      context: ./services/backend
+      target: production
+    container_name: backend
+    restart: unless-stopped
+    environment:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      BACKEND_PORT: ${BACKEND_PORT}
+      DB_PASSWORD_FILE: /run/secrets/db_user_pass
+      JWT_SECRET_FILE: /run/secrets/jwt_secret
+      RUN_DB_MIGRATIONS: "true"
+    secrets:
+      - db_user_pass
+      - jwt_secret
+    networks:
+      - sbjobs_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+networks:
+  sbjobs_network:
+    driver: bridge
+    name: sbjobs_network
+
+secrets:
+  db_admin_pass:
+    file: ./secrets/postgres_admin_pass.txt
+  jwt_secret:
+    file: ./secrets/jwt_secret.txt
+  db_user_pass:
+    file: ./secrets/postgres_user_pass.txt
+
+volumes:
+  db_data:

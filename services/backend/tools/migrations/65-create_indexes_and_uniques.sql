@@ -1,0 +1,22 @@
+CREATE UNIQUE INDEX IF NOT EXISTS ux_users_email ON users (lower(email));
+CREATE UNIQUE INDEX IF NOT EXISTS ux_applications_user_offer ON applications (user_id, job_offer_id);
+CREATE UNIQUE INDEX IF NOT EXISTS ux_cv_default_per_user ON user_cv_templates (user_id) WHERE is_default = true;
+CREATE UNIQUE INDEX IF NOT EXISTS ux_application_cv_version ON application_cv_versions (application_id, version_number);
+
+CREATE INDEX IF NOT EXISTS ix_cv_sections_template_type ON user_cv_sections (cv_template_id, section_type);
+CREATE INDEX IF NOT EXISTS ix_cv_sections_template_position ON user_cv_sections (cv_template_id, position);
+CREATE INDEX IF NOT EXISTS ix_companies_name ON companies (name);
+CREATE INDEX IF NOT EXISTS ix_companies_location ON companies (country, city);
+CREATE INDEX IF NOT EXISTS ix_company_contacts_company_id ON company_contacts (company_id);
+CREATE INDEX IF NOT EXISTS ix_company_contacts_email ON company_contacts (email);
+CREATE INDEX IF NOT EXISTS ix_job_offers_company_id ON job_offers (company_id);
+CREATE INDEX IF NOT EXISTS ix_job_offers_status ON job_offers (status);
+CREATE INDEX IF NOT EXISTS ix_job_offers_published_at ON job_offers (published_at);
+CREATE INDEX IF NOT EXISTS ix_job_offers_external_ref ON job_offers (external_ref);
+CREATE INDEX IF NOT EXISTS ix_job_offer_contacts_job_offer_id ON job_offer_contacts (job_offer_id);
+CREATE INDEX IF NOT EXISTS ix_applications_user_status ON applications (user_id, status);
+CREATE INDEX IF NOT EXISTS ix_applications_offer_status ON applications (job_offer_id, status);
+CREATE INDEX IF NOT EXISTS ix_application_events_app_time ON application_events (application_id, event_at);
+CREATE INDEX IF NOT EXISTS ix_application_events_type ON application_events (event_type);
+CREATE INDEX IF NOT EXISTS ix_application_attachments_app_id ON application_attachments (application_id);
+CREATE INDEX IF NOT EXISTS ix_application_attachments_type ON application_attachments (attachment_type);

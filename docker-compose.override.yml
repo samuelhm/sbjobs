@@ -1,0 +1,14 @@
+services:
+  postgres:
+    ports:
+      - "5432:5432"
+
+  backend:
+    build:
+      target: dev
+    environment:
+      RUN_DB_MIGRATIONS: "false"
+    ports:
+      - "${BACKEND_PORT:-4000}:${BACKEND_PORT:-4000}"
+    volumes:
+      - ./services/backend/src:/app/src
