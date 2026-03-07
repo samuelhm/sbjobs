@@ -7,7 +7,9 @@ services:
     build:
       target: dev
     environment:
-      RUN_DB_MIGRATIONS: "false"
+      RUN_DB_MIGRATIONS: "true"
+      SECURE_COOKIE: "false"
+      HTTP_ONLY_COOKIE: "false"
     ports:
       - "${BACKEND_PORT:-4000}:${BACKEND_PORT:-4000}"
     volumes:

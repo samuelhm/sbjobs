@@ -35,6 +35,8 @@ services:
       DB_PASSWORD_FILE: /run/secrets/db_user_pass
       JWT_SECRET_FILE: /run/secrets/jwt_secret
       RUN_DB_MIGRATIONS: "true"
+      SECURE_COOKIE: ${SECURE_COOKIE}
+      HTTP_ONLY_COOKIE: ${HTTP_ONLY_COOKIE}
     secrets:
       - db_user_pass
       - jwt_secret
