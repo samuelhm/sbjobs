@@ -5,6 +5,7 @@ import fastifyCookie from '@fastify/cookie';
 
 import authRoutes from './routes/auth.js';
 import crudRoutes from './routes/crud.js';
+import n8nRoutes from './routes/n8n.js';
 import { HttpError, toErrorResponse } from './utils/errors.js';
 
 export const buildApp = async (options = {}) => {
@@ -67,6 +68,7 @@ export const buildApp = async (options = {}) => {
   });
 
   fastify.register(authRoutes, { prefix: '/auth' });
+  fastify.register(n8nRoutes, { prefix: '/n8n' });
   fastify.register(
     async (instance) => {
       instance.addHook('preHandler', instance.authenticate);

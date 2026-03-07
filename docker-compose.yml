@@ -34,12 +34,57 @@ services:
       BACKEND_PORT: ${BACKEND_PORT}
       DB_PASSWORD_FILE: /run/secrets/db_user_pass
       JWT_SECRET_FILE: /run/secrets/jwt_secret
+      N8N_API_KEY_FILE: /run/secrets/n8n_api_key
       RUN_DB_MIGRATIONS: "true"
       SECURE_COOKIE: ${SECURE_COOKIE}
       HTTP_ONLY_COOKIE: ${HTTP_ONLY_COOKIE}
     secrets:
       - db_user_pass
       - jwt_secret
+      - n8n_api_key
+    networks:
+      - sbjobs_network
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  userui:
+    build:
+      context: ./services/ui
+      target: production
+    container_name: userui
+    restart: unless-stopped
+    environment:
+      BACKEND_PORT: ${BACKEND_PORT:-4000}
+    ports:
+      - "8080:80"
+    networks:
+      - sbjobs_network
+    depends_on:
+      - backend
+
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:${N8N_VERSION:-stable}
+    container_name: n8n
+    restart: unless-stopped
+    environment:
+      DB_TYPE: postgresdb
+      DB_POSTGRESDB_DATABASE: ${DB_NAME}
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_USER: ${DB_USER}
+      DB_POSTGRESDB_PASSWORD_FILE: /run/secrets/db_user_pass
+      N8N_ENCRYPTION_KEY_FILE: /run/secrets/n8n_encryption_key
+      N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS: "true"
+      NODE_ENV: production
+      N8N_PORT: ${N8N_PORT:-5678}
+      GENERIC_TIMEZONE: ${GENERIC_TIMEZONE:-UTC}
+      TZ: ${GENERIC_TIMEZONE:-UTC}
+    volumes:
+      - n8n_data:/home/node/.n8n
+    secrets:
+      - db_user_pass
+      - n8n_encryption_key
     networks:
       - sbjobs_network
     depends_on:
@@ -57,6 +102,11 @@ secrets:
     file: ./secrets/jwt_secret.txt
   db_user_pass:
     file: ./secrets/postgres_user_pass.txt
+  n8n_encryption_key:
+    file: ./secrets/n8n_encryption_key.txt
+  n8n_api_key:
+    file: ./secrets/n8n_api_key.txt
 
 volumes:
   db_data:
+  n8n_data:

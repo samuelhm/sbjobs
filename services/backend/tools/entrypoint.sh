@@ -32,6 +32,14 @@ if [ -n "${JWT_SECRET_FILE:-}" ]; then
   export JWT_SECRET="$(cat "${JWT_SECRET_FILE}")"
 fi
 
+if [ -n "${N8N_API_KEY_FILE:-}" ]; then
+  if [ ! -f "${N8N_API_KEY_FILE}" ]; then
+    echo "N8N_API_KEY_FILE does not exist: ${N8N_API_KEY_FILE}" >&2
+    exit 1
+  fi
+  export N8N_API_KEY="$(cat "${N8N_API_KEY_FILE}")"
+fi
+
 if [ -f "/app/tools/run-migrations.sh" ]; then
   /app/tools/run-migrations.sh
 fi

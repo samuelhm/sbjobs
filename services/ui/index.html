@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UserUI - Crear usuario</title>
+  </head>
+  <body>
+    <main class="page">
+      <section class="card">
+        <h1>Crear usuario</h1>
+        <p class="subtitle">Completa los datos para registrar un nuevo usuario.</p>
+
+        <form id="user-form" novalidate>
+          <div class="field">
+            <label for="email">Email *</label>
+            <input id="email" name="email" type="email" autocomplete="email" required />
+            <small class="error" data-error-for="email"></small>
+          </div>
+
+          <div class="field">
+            <label for="password">Password *</label>
+            <input id="password" name="password" type="password" autocomplete="new-password" required />
+            <small class="error" data-error-for="password"></small>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="first_name">Nombre</label>
+              <input id="first_name" name="first_name" type="text" autocomplete="given-name" />
+              <small class="error" data-error-for="first_name"></small>
+            </div>
+
+            <div class="field">
+              <label for="last_name">Apellidos</label>
+              <input id="last_name" name="last_name" type="text" autocomplete="family-name" />
+              <small class="error" data-error-for="last_name"></small>
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field">
+              <label for="phone">Telefono</label>
+              <input id="phone" name="phone" type="tel" autocomplete="tel" />
+              <small class="error" data-error-for="phone"></small>
+            </div>
+
+            <div class="field">
+              <label for="avatar">Avatar (URL)</label>
+              <input id="avatar" name="avatar" type="url" autocomplete="url" />
+              <small class="error" data-error-for="avatar"></small>
+            </div>
+          </div>
+
+          <button id="submit-btn" type="submit">Crear usuario</button>
+          <p id="status" class="status" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

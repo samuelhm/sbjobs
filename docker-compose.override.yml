@@ -14,3 +14,15 @@ services:
       - "${BACKEND_PORT:-4000}:${BACKEND_PORT:-4000}"
     volumes:
       - ./services/backend/src:/app/src
+
+  userui:
+    build:
+      target: dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./services/ui/src:/app/src
+
+  n8n:
+    ports:
+      - "${N8N_PORT:-5678}:5678"

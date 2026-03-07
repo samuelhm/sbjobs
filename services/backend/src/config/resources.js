@@ -80,7 +80,6 @@ export const resourceDefinitions = {
     table: 'companies',
     idColumn: 'id',
     ownership: { type: 'none' },
-    allowCreate: true,
     fields: {
       name: { type: 'string' },
       website: { type: 'string' },
@@ -97,7 +96,6 @@ export const resourceDefinitions = {
     table: 'company_contacts',
     idColumn: 'id',
     ownership: { type: 'none' },
-    allowCreate: true,
     fields: {
       company_id: { type: 'integer' },
       full_name: { type: 'string' },
@@ -114,7 +112,6 @@ export const resourceDefinitions = {
     table: 'job_offers',
     idColumn: 'id',
     ownership: { type: 'none' },
-    allowCreate: true,
     fields: {
       company_id: { type: 'integer' },
       title: { type: 'string' },
@@ -139,7 +136,6 @@ export const resourceDefinitions = {
     table: 'job_offer_contacts',
     idColumn: 'id',
     ownership: { type: 'none' },
-    allowCreate: true,
     fields: {
       job_offer_id: { type: 'integer' },
       company_contact_id: { type: 'integer' },
