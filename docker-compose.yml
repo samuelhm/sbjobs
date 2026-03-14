@@ -1,0 +1,81 @@
+services:
+  postgres:
+    build:
+      context: ./postgres
+      dockerfile: Dockerfile
+    container_name: sbjobs_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_ADMIN_USER}
+      POSTGRES_BACKEND_USER: ${POSTGRES_BACKEND_USER}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./secrets:/run/secrets:ro
+    networks:
+      - sbjobs_network
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_ADMIN_USER} -d ${POSTGRES_DB} && psql -U ${POSTGRES_ADMIN_USER} -d ${POSTGRES_DB} -tAc \"SELECT 1 FROM pg_roles WHERE rolname='${POSTGRES_BACKEND_USER}'\" | grep -q 1"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: sbjobs_backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: ${NODE_ENV}
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_BACKEND_USER}
+    volumes:
+      - ./secrets:/run/secrets:ro
+      - ./backend/migrations:/app/migrations:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+      migrator:
+        condition: service_completed_successfully
+    networks:
+      - sbjobs_network
+
+  migrator:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: sbjobs_migrator
+    restart: "no"
+    entrypoint:
+      [
+        "/bin/sh",
+        "-c",
+        ". ./tools/load-migration-secrets.sh && ./tools/run-migrations.sh"
+      ]
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${POSTGRES_DB}
+      DB_USER: ${POSTGRES_ADMIN_USER}
+    volumes:
+      - ./secrets:/run/secrets:ro
+      - ./backend/migrations:/app/migrations:ro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - sbjobs_network
+
+volumes:
+  postgres_data:
+
+networks:
+  sbjobs_network:
+    driver: bridge

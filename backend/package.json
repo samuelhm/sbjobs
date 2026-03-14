@@ -1,0 +1,22 @@
+{
+  "name": "sbjobs-backend",
+  "version": "1.0.0",
+  "description": "Backend service for sbjobs",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "@fastify/autoload": "^6.3.1",
+    "@fastify/cookie": "^11.0.2",
+    "@fastify/jwt": "^10.0.0",
+    "fastify": "^5.8.2",
+    "fastify-plugin": "^5.1.0",
+    "pg": "^8.11.0"
+  },
+  "devDependencies": {
+    "pino-pretty": "^11.0.0"
+  }
+}

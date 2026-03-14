@@ -1,0 +1,14 @@
+services:
+  postgres:
+    ports:
+      - "${POSTGRES_PORT}:5432"
+
+  backend:
+    command: npm run dev
+    environment:
+      NODE_ENV: development
+    ports:
+      - "${BACKEND_PORT}:3000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
