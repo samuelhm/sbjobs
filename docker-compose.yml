@@ -64,6 +64,9 @@ services:
       DB_PORT: 5432
       DB_NAME: ${POSTGRES_DB}
       DB_USER: ${POSTGRES_ADMIN_USER}
+      MIGRATIONS_MODE: ${MIGRATIONS_MODE:-up}
+      AUTO_REBUILD_ON_CHANGE: ${AUTO_REBUILD_ON_CHANGE:-false}
+      POSTGRES_BACKEND_USER: ${POSTGRES_BACKEND_USER}
     volumes:
       - ./secrets:/run/secrets:ro
       - ./backend/migrations:/app/migrations:ro

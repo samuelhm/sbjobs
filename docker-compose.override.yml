@@ -3,6 +3,10 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
 
+  migrator:
+    environment:
+      AUTO_REBUILD_ON_CHANGE: true
+
   backend:
     command: npm run dev
     environment:
